@@ -1,0 +1,66 @@
+services:
+  rinbot-django:
+    container_name: rinbot-django
+    build:
+      context: .
+    environment:
+      - DJANGO_SETTINGS_MODULE=settings
+    volumes:
+      - ./rinbot:/app
+      - instance-data:/var/lib/rinbot
+      - ./rinbot/lavalink/config/rinbot.yml:/app/lavalink/config/rinbot.yml
+    ports:
+      - 8002:8000
+    networks:
+      - RinNetwork
+    depends_on:
+      - rinbot-lavalink
+      - rinbot-postgres
+
+  rinbot-lavalink:
+    container_name: rinbot-lavalink
+    build:
+      context: .
+      dockerfile: Dockerfile.lavalink
+    volumes:
+      - ./rinbot:/app
+      - ./rinbot/lavalink/config/lavalink.yml:/opt/lavalink/application.yml
+      - ./rinbot/lavalink/config/rinbot.yml:/opt/lavalink/rinbot.yml
+      - ./rinbot/lavalink/plugins:/opt/lavalink/plugins
+      - instance-data:/var/lib/rinbot
+    ports:
+      - 2333:2333
+    networks:
+      - RinNetwork
+    restart: unless-stopped
+
+  rinbot-postgres:
+    container_name: rinbot-postgres
+    image: postgres:16
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./rinbot/lavalink/config/rinbot.yml:/rinbot.yml
+    ports:
+      - 5432:5432
+    networks:
+      - RinNetwork
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rinbot"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+
+networks:
+  RinNetwork:
+    external: true
+
+volumes:
+  instance-data:
+    name: rinbot-instance-data
+  postgres-data:
+    name: rinbot-postgres-data

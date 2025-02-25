@@ -1,0 +1,23 @@
+# Base
+aiosqlite
+discord
+pydantic
+pytz
+strenum
+wavelink
+pyyaml
+gtts
+translate
+pynacl
+pillow
+moviepy
+numpy
+pylsd-nova
+google-generativeai
+langdetect
+Django
+djangorestframework
+django-cors-headers
+psycopg2
+psycopg2-binary
+asyncpg
