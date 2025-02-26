@@ -11,8 +11,11 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 import os
+
 from pathlib import Path
-from config import django_config, database_config
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent
@@ -22,15 +25,16 @@ BASE_DIR = Path(__file__).resolve().parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = django_config.get('secret_key', 'django-insecure-xfhm^=4y$ehn2^-i-*@ts-g+b*=5+^k9+gtk2#j1oz8dudu13j')
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = django_config.get('debug', True)
+DEBUG = os.getenv('DJANGO_DEBUG')
 
-ALLOWED_HOSTS = django_config.get('allowed_hosts', [])
+ALLOWED_HOSTS = []
 
 
 # Application definition
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -74,23 +78,14 @@ WSGI_APPLICATION = 'wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-# SQLite configuration (commented out but kept for reference)
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'django' / 'db' / 'db.sqlite3',
-#     }
-# }
-
-# PostgreSQL configuration
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME', database_config.get('name')),
-        'USER': os.environ.get('DB_USER', database_config.get('user')),
-        'PASSWORD': os.environ.get('DB_PASSWORD', database_config.get('password')),
-        'HOST': os.environ.get('DB_HOST', database_config.get('host')),
-        'PORT': os.environ.get('DB_PORT', database_config.get('port')),
+        'NAME': os.getenv('POSTGRES_DATABASE'),
+        'USER': os.getenv('POSTGRES_USER'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+        'HOST': 'RinBot-DB',
+        'PORT': '5432',
     }
 }
 
@@ -119,7 +114,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = os.getenv('DJANGO_TIME_ZONE')
 
 USE_I18N = True
 

@@ -1,0 +1,16 @@
+python-dotenv
+discord
+pydantic
+strenum
+wavelink
+pyyaml
+gtts
+translate
+langdetect
+google-generativeai
+celery
+psycopg2
+asyncpg
+django
+django-environ
+django-cors-headers

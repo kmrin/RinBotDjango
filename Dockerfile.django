@@ -1,0 +1,26 @@
+FROM python:3.11.1
+
+ENV DJANGO_SETTINGS_MODULE=settings
+ENV PYTHONPATH=/app
+
+RUN apt-get update && apt-get install -y \
+    postgresql-client \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+COPY requirements.txt /app
+COPY rinbot/scripts/django-entrypoint.sh /app/scripts/django-entrypoint.sh
+
+RUN pip install --upgrade pip
+RUN pip install -r requirements.txt
+
+RUN mkdir -p /var/lib/rinbot/logs/tracebacks \
+    /var/lib/rinbot/logs/lavalink \
+    /var/lib/rinbot/cache
+
+RUN chmod -R 777 /var/lib/rinbot
+RUN chmod +x /app/scripts/django-entrypoint.sh
+
+CMD ["/app/scripts/django-entrypoint.sh"]
