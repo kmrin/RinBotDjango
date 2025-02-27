@@ -16,7 +16,8 @@ COPY rinbot/scripts/django-entrypoint.sh /app/scripts/django-entrypoint.sh
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-RUN mkdir -p /var/lib/rinbot/logs/tracebacks \
+RUN mkdir -p /var/lib/rinbot/logs/history \
+    /var/lib/rinbot/logs/tracebacks \
     /var/lib/rinbot/logs/lavalink \
     /var/lib/rinbot/cache
 

@@ -1,0 +1,61 @@
+version: 7.0.0
+debug: false
+forward_discord_logs: false
+
+status:
+  language: en-GB
+  interval: 5
+  log: false
+
+auto-kick:
+  enabled: false
+  warn_limit: 5
+
+spam-filter:
+  enabled: false
+  time_window: 5
+  max_per_window: 2
+
+  actions:
+    mute: false
+    warn: false
+    kick: false
+
+nsfw-extensions:
+  danbooru:
+    enabled: false
+    api_key: null
+  rule34:
+    enabled: false
+    api_key: null
+  e621:
+    enabled: false
+    api_key: null
+
+lavalink:
+  host: RinBot-Lavalink
+  port: 2333
+  password: rinbot
+
+tasks:
+  - status_loop
+
+internal-extensions:
+  - event_handler
+
+intents:
+  dm_messages: true
+  dm_typing: true
+  guild_messages: true
+  guild_typing: true
+  guilds: true
+  integrations: true
+  voice_states: true
+  webhooks: true
+  members: true
+  message_content: true
+  moderation: true
+  presences: true
+  messages: true
+  typing: true
+  bans: true

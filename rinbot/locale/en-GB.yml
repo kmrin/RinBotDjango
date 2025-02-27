@@ -1,0 +1,31 @@
+# System strings
+system:
+    yes: "Yes"
+    no: "No"
+
+# Command strings; Names, descriptions, arguments, options, etc.
+commands:
+    # /extension
+    core_ext_manipulate_load_action: "Load"
+    core_ext_manipulate_unload_action: "Unload"
+    core_ext_manipulate_reload_action: "Reload"
+    
+    # /set greeting
+    config_set_greeting_embed_no_picture: "No Picture"
+    config_set_greeting_embed_small: "Small"
+    config_set_greeting_embed_large: "Large"
+
+# Response strings; Error messages, responses to user interactions, etc.
+responses:
+    # Errors
+    error_not_in_guild: " ❌  You must be in a guild to run this command"
+    error_not_owner: " ❌  You must be an owner to run this command"
+    error_not_admin: " ❌  You must be an admin to run this command"
+    error_blacklisted: " ❌  You're blacklisted from running commands"
+    error_interaction_timeout: " ❌  The interaction timed out"
+    error_owners_empty: " ❌  There are no owners registered"
+
+    # Tree errors
+    tree_missing_perms: " ❌  You don't have the necessary permissions to run this command: {perms}"
+    tree_bot_missing_perms: " ❌  I don't have the necessary permissions to run this command: {perms}"
+    tree_transformer_error: " ❌  An error occurred while converting a command argument"
