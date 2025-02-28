@@ -9,7 +9,8 @@ translate
 langdetect
 google-generativeai
 celery
-psycopg2
+psycopg2 ; sys_platform == "win32"
+psycopg2-binary ; sys_platform != "win32"  # Use binary for linux/macOS
 asyncpg
 django
 django-environ
