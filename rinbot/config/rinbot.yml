@@ -7,19 +7,10 @@ status:
   interval: 5
   log: false
 
-auto-kick:
-  enabled: false
-  warn_limit: 5
-
 spam-filter:
   enabled: false
   time_window: 5
   max_per_window: 2
-
-  actions:
-    mute: false
-    warn: false
-    kick: false
 
 nsfw-extensions:
   danbooru:

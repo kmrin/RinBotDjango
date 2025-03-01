@@ -11,22 +11,10 @@ class _Status(BaseModel):
     log: bool
 
 
-class _AutoKick(BaseModel):
-    enabled: bool
-    warn_limit: int
-
-
-class _SpamFilterActions(BaseModel):
-    mute: bool
-    warn: bool
-    kick: bool
-
-
 class _SpamFilter(BaseModel):
     enabled: bool
     time_window: int
     max_per_window: int
-    actions: _SpamFilterActions
 
 
 class _Danbooru(BaseModel):
@@ -61,7 +49,6 @@ class Config(BaseModel):
     debug: bool
     forward_discord_logs: bool
     status: _Status
-    auto_kick: _AutoKick = Field(alias="auto-kick")
     spam_filter: _SpamFilter = Field(alias="spam-filter")
     nsfw_extensions: _NSFWExtensions = Field(alias="nsfw-extensions")
     lavalink: _Lavalink
