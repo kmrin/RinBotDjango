@@ -124,6 +124,15 @@ for logger_name, custom_logger in vars(Logger).items():
         custom_logger.addHandler(file_handler)
 
 
+def format_exception(e: Exception) -> str:
+    """
+    Formats an exception into a understandable string
+    """
+    
+    path, line, _, _ = traceback.extract_tb(e.__traceback__)[-1]
+    return f"{type(e).__name__} [{os.path.basename(path)} | {line}] -> {str(e)}"
+
+
 def log_exception(
         e: Exception,
         logger: Optional[LoggingLogger] = None,
@@ -143,10 +152,7 @@ def log_exception(
         str: The formatted exception as "ex_name [path | line] -> ex_msg"
     """
     
-    path, line, _, _ = traceback.extract_tb(e.__traceback__)[-1]
-    path = os.path.basename(path)
-    
-    formatted = f"{type(e).__name__} [{path} | {line}] -> {str(e)}"
+    formatted = format_exception(e)
     
     level = CRITICAL if critical else ERROR
     
