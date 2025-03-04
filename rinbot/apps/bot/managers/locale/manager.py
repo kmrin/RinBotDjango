@@ -27,7 +27,7 @@ def check_sections(locale_file: str, locale_data: dict) -> bool:
             logger.error(f"Section '{section}' is not a dictionary")
             return False
     
-    logger.info(f"Locale file at '{locale_file}' is valid")
+    logger.debug(f"Locale file at '{locale_file}' is valid")
     return True
 
 
@@ -38,7 +38,7 @@ def get_locale(locale: str | Locale) -> Optional[Localisation]:
         logger.error(f"Locale file at '{base_locale_path}' does not exist")
         return None
     
-    locale_data = read(base_locale_path)
+    locale_data = read(base_locale_path, silent=True)
 
     if locale_data is None:
         logger.error(f"Locale file at '{base_locale_path}' is empty, invalid or doesn't exist")
