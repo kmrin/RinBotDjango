@@ -1,5 +1,5 @@
 from enum import Enum
-from pydantic import BaseModel
+from dataclasses import dataclass
 from typing import Optional
 from discord import TextChannel, VoiceClient
 from discord.app_commands import Choice, locale_str
@@ -11,26 +11,31 @@ class Response(Enum):
     CHANNEL = 3
 
 
-class Localisation(BaseModel):
+@dataclass
+class Localisation:
     system: dict[str, str | list[str]]
     commands: dict[str, str | list[str]]
     responses: dict[str, str | list[str]]
 
-class Track(BaseModel):
+
+@dataclass
+class Track:
     title: str
     url: str
     duration: str
     uploader: Optional[str] = None
 
 
-class Playlist(BaseModel):
+@dataclass
+class Playlist:
     title: str
     url: str
     count: int
     uploader: Optional[str] = None
 
 
-class TTSClient(BaseModel):
+@dataclass
+class TTSClient:
     channel: TextChannel
     client: VoiceClient
     language: str

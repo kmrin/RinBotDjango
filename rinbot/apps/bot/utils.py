@@ -12,11 +12,15 @@ from discord.abc import PrivateChannel
 from discord.threads import Thread
 from discord.app_commands import Command
 from typing import Optional, Union, TYPE_CHECKING
+from logging import Logger as LoggingLogger
+from functools import wraps
 
 from .managers.locale import (
     get_interaction_locale,
     get_localised_string
 )
+
+from .log import log_exception
 
 if TYPE_CHECKING:
     from .client import Client
@@ -103,3 +107,26 @@ async def get_channel(
     
     except (Forbidden, NotFound):
         return None
+
+
+def log_errors(logger: LoggingLogger, is_async: bool = False):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            try:
+                return func(*args, **kwargs)
+            except Exception as e:
+                log_exception(e, logger)
+                return None
+        
+        @wraps(func)
+        async def async_wrapper(*args, **kwargs):
+            try:
+                return await func(*args, **kwargs)
+            except Exception as e:
+                log_exception(e, logger)
+                return None
+            
+        return async_wrapper if is_async else wrapper
+    
+    return decorator

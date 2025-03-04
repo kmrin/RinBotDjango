@@ -1,5 +1,5 @@
 version: 7.0.0
-debug: false
+debug: true
 forward_discord_logs: false
 
 status:
@@ -28,8 +28,12 @@ lavalink:
   port: 2333
   password: rinbot
 
+testing-servers:
+  - 1135238728403656834
+
 tasks:
   - status_loop
+  - birthday_check
 
 internal-extensions:
   - event_handler

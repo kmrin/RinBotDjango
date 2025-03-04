@@ -1,5 +1,10 @@
 # System strings
 system:
+    statuses:
+        - " ✌️ Listening to your commands"
+        - " 🥰 At your service"
+    
+    maintenance_status: " ⚠️  Maintenance mode"
     yes: "Yes"
     no: "No"
 
@@ -29,3 +34,7 @@ responses:
     tree_missing_perms: " ❌  You don't have the necessary permissions to run this command: {perms}"
     tree_bot_missing_perms: " ❌  I don't have the necessary permissions to run this command: {perms}"
     tree_transformer_error: " ❌  An error occurred while converting a command argument"
+
+    # Birthday
+    birthday_title: " 🎂🎉  Birthday reminder!"
+    birthday_description: "Today is {name}'s special day!\n Remember to send them a message!"

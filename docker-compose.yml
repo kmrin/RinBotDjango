@@ -33,9 +33,11 @@ services:
     environment:
       SERVER_PORT: ${LAVALINK_PORT}
       SERVER_PASSWORD: ${LAVALINK_PASSWORD}
+      LAVALINK_YOUTUBE_PO_TOKEN: ${LAVALINK_YOUTUBE_PO_TOKEN}
+      LAVALINK_YOUTUBE_VISITOR_DATA: ${LAVALINK_YOUTUBE_VISITOR_DATA}
     volumes:
       - ./rinbot/lavalink/plugins:/opt/lavalink/plugins
-      - ./rinbot/config/lavalink.yml:/opt/lavalink/application.yml
+      - ./rinbot/lavalink/config/lavalink.yml:/opt/lavalink/application.yml
       - instance_data:/var/lib/rinbot
     expose:
       - ${LAVALINK_PORT}
@@ -51,9 +53,12 @@ services:
       DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
       DJANGO_DEBUG: ${DJANGO_DEBUG}
       DJANGO_TIME_ZONE: ${DJANGO_TIME_ZONE}
+      DJANGO_LANGUAGE_CODE: ${DJANGO_LANGUAGE_CODE}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DATABASE: ${POSTGRES_DATABASE}
+      BOT_DISCORD_TOKEN: ${BOT_DISCORD_TOKEN}
+      BOT_RUN_WITH_DJANGO: ${BOT_RUN_WITH_DJANGO}
     volumes:
       - ./rinbot:/app
       - instance_data:/var/lib/rinbot
@@ -62,6 +67,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      lavalink:
+        condition: service_started
     restart: unless-stopped
 
 volumes:

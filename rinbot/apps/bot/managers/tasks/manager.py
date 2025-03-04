@@ -52,3 +52,21 @@ class TaskManager:
             
             else:
                 logger.error(f"'{taskname}' is not a valid task")
+
+    async def cancel_all_tasks(self) -> None:
+        logger.info("Cancelling all tasks")
+        
+        await self.stop()
+        
+        for attr_name in dir(self.tasklist):
+            task = getattr(self.tasklist, attr_name, None)
+            
+            if callable(task) and isinstance(task, tasks.Loop):
+                try:
+                    if task.is_running():
+                        task.cancel()
+                        logger.info(f"Forcefully cancelled '{attr_name}'")
+                except Exception as e:
+                    logger.error(f"Error cancelling task '{attr_name}': {e}")
+        
+        logger.info("All tasks cancelled")

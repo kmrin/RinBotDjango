@@ -25,12 +25,12 @@ BASE_DIR = Path(__file__).resolve().parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-bc@qd2*a2jw67&%i&ag3!onjmspybt&dlbwzokt%2twhh*ul_d"
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DJANGO_DEBUG')
+DEBUG = (os.getenv('DJANGO_DEBUG', 'False') == 'True')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    '.',
+    'apps.bot'
 ]
 
 MIDDLEWARE = [
@@ -113,9 +113,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
-LANGUAGE_CODE = os.getenv('DJANGO_LANGUAGE_CODE')
+LANGUAGE_CODE = os.getenv('DJANGO_LANGUAGE_CODE', 'en-gb')
 
-TIME_ZONE = os.getenv('DJANGO_TIME_ZONE')
+TIME_ZONE = os.getenv('DJANGO_TIME_ZONE', 'UTC')
 
 USE_I18N = True
 
@@ -131,3 +131,7 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Disable auto-reloader when running with the bot to prevent multiple instances
+if os.getenv('BOT_RUN_WITH_DJANGO', 'False') == 'True':
+    USE_RELOADER = False

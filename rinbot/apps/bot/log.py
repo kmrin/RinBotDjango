@@ -49,7 +49,7 @@ class LoggingFormatter(Formatter):
         return formatter.format(record)
 
 
-log_filename_latest = os.path.join(Path.LOG_LATEST, "latest.log")
+log_filename_latest = os.path.join(Path.LOG_LATEST)
 log_dirname_latest = os.path.dirname(log_filename_latest)
 
 if os.path.exists(log_filename_latest):
@@ -99,7 +99,7 @@ class Logger:
     GEMINI: LoggingLogger         = getLogger("Gemini")
     HELPERS: LoggingLogger        = getLogger("Helpers")
     INTERFACE: LoggingLogger      = getLogger("Interface")
-    LOCALE: LoggingLogger         = getLogger("Localization")
+    LOCALE: LoggingLogger         = getLogger("Localisation")
     MUSIC: LoggingLogger          = getLogger("Music")
     PROGRAMS: LoggingLogger       = getLogger("Programs")
     STARTUP_CHECKS: LoggingLogger = getLogger("Startup Checks")
@@ -118,7 +118,7 @@ class Logger:
 
 for logger_name, custom_logger in vars(Logger).items():
     if isinstance(custom_logger, LoggingLogger) and logger_name != "root":
-        custom_logger.setLevel(DEBUG if conf.DEBUG else INFO)
+        custom_logger.setLevel(DEBUG if conf.debug else INFO)
         custom_logger.propagate = True
         custom_logger.addHandler(console_handler)
         custom_logger.addHandler(file_handler)

@@ -52,6 +52,7 @@ class Config(BaseModel):
     spam_filter: _SpamFilter = Field(alias="spam-filter")
     nsfw_extensions: _NSFWExtensions = Field(alias="nsfw-extensions")
     lavalink: _Lavalink
+    testing_servers: Optional[List[int]] = Field(alias="testing-servers", default_factory=list)
     tasks: List[str]
     internal_extensions: List[str] = Field(alias="internal-extensions")
     intents: Dict[str, bool]

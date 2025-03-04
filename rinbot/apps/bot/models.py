@@ -3,6 +3,38 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.postgres.fields import ArrayField
 
 
+class AutoRole(models.Model):
+    active = models.BooleanField(default=True)
+    guild_id = models.BigIntegerField()
+    guild_name = models.CharField(max_length=100)
+    role_id = models.BigIntegerField()
+    role_name = models.CharField(max_length=100)
+    
+    class Meta:
+        unique_together = ('guild_id', 'role_id')
+        verbose_name = "Auto Role"
+        verbose_name_plural = "Auto Roles"
+
+    def __str__(self):
+        return f"{self.role_name} in {self.guild_name}"
+
+
+class Birthdays(models.Model):
+    date = models.DateField()
+    name = models.CharField(max_length=100)
+    user_id = models.BigIntegerField()
+    user_name = models.CharField(max_length=100)
+    user_locale = models.CharField(max_length=100)
+    
+    class Meta:
+        unique_together = ('date', 'user_id')
+        verbose_name = "Birthday"
+        verbose_name_plural = "Birthdays"
+
+    def __str__(self):
+        return f"{self.name} on {self.date}"
+
+
 class Blacklist(models.Model):
     guild_id = models.BigIntegerField()
     guild_name = models.CharField(max_length=100, null=True, blank=True)
@@ -14,13 +46,6 @@ class Blacklist(models.Model):
 
     def __str__(self):
         return f"{self.user_name or self.user_id} in {self.guild_name or self.guild_id}"
-
-
-class Client(models.Model):
-    token = models.CharField(max_length=255)
-
-    def __str__(self):
-        return "RinBot Client"
 
 
 class FavouriteTracks(models.Model):
@@ -76,6 +101,8 @@ class GuildConfig(models.Model):
         choices=SPAM_FILTER_CHOICES,
         validators=[MinValueValidator(0), MaxValueValidator(2)]
     )
+    spam_filter_message = models.TextField(null=True, blank=True)
+    spam_filter_reason = models.TextField(null=True, blank=True)
 
     class Meta:
         verbose_name = "Guild Configuration"

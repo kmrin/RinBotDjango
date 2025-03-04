@@ -15,6 +15,7 @@ def is_hex_colour(colour: str) -> bool:
     """
     Check if a string is a valid hex colour
     """
+    
     return bool(re.match(r"^#(?:[0-9a-fA-F]{6})$", colour))
 
 
