@@ -75,8 +75,8 @@ class Core(Cog, name="core"):
     owner_gp = Group(
         name=locale_str("core_owners_group_name"),
         description=locale_str("core_owners_group_desc"),
-        allowed_contexts=AppCommandContext(guild=True, dm_channel=False, private_channel=True),
-        allowed_installs=AppInstallationType(guild=True, user=False)
+        allowed_contexts=AppCommandContext(guild=True, dm_channel=True, private_channel=True),
+        allowed_installs=AppInstallationType(guild=True, user=True)
     )
 
     # /ping
@@ -161,7 +161,7 @@ class Core(Cog, name="core"):
             return await self.respond_with_failure(interaction, "core_ext_internal")
         
         try:
-            self.client.load_extension(f"apps.bot.extensions.{extension}")
+            await self.client.load_extension(f"apps.bot.extensions.{extension}")
             
             await self.respond_with_success(interaction, "core_ext_load_success", ext=extension, hidden=True)
             await self.client.sync_commands()
@@ -194,7 +194,7 @@ class Core(Cog, name="core"):
             return await self.respond_with_failure(interaction, "core_ext_internal")
         
         try:
-            self.client.unload_extension(f"apps.bot.extensions.{extension}")
+            await self.client.unload_extension(f"apps.bot.extensions.{extension}")
             
             await self.respond_with_success(interaction, "core_ext_unload_success", ext=extension, hidden=True)
             await self.client.sync_commands()
@@ -225,7 +225,7 @@ class Core(Cog, name="core"):
             return await self.respond_with_failure(interaction, "core_ext_internal")
         
         try:
-            self.client.reload_extension(f"apps.bot.extensions.{extension}")
+            await self.client.reload_extension(f"apps.bot.extensions.{extension}")
             
             await self.respond_with_success(interaction, "core_ext_reload_success", ext=extension, hidden=True)
             await self.client.sync_commands()
