@@ -45,7 +45,6 @@ class Client(Bot):
                 guild = await get_guild(self, guild_id)
                 
                 if guild:
-                    self.tree.copy_global_to(guild=DiscordObj(guild_id))
                     await self.tree.sync(guild=guild)
                     
                     logger.info(f"Synced to guild {guild.name} ({guild_id})")
