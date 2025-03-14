@@ -16,6 +16,9 @@ SECTIONS = [
     "responses"
 ]
 
+CHECKED: dict[str, bool] = {}
+INVALID_REPORTED_KEYS: dict[str, list[str]] = {}
+
 
 def check_sections(locale_file: str, locale_data: dict) -> bool:    
     for section in SECTIONS:
@@ -27,7 +30,11 @@ def check_sections(locale_file: str, locale_data: dict) -> bool:
             logger.error(f"Section '{section}' is not a dictionary")
             return False
     
-    logger.debug(f"Locale file at '{locale_file}' is valid")
+    if locale_file not in CHECKED:
+        logger.debug(f"Locale file at '{locale_file}' is valid")
+    
+    CHECKED[locale_file] = True
+    
     return True
 
 
@@ -79,8 +86,14 @@ def get_localised_string(locale: str, key: str, *args, **kwargs) -> Optional[str
             string = section[key]
             break
     
-    else:
-        logger.error(f"Missing localised string '{key}' for locale '{locale}'")
+    else:        
+        if locale not in INVALID_REPORTED_KEYS:
+            INVALID_REPORTED_KEYS[locale] = []
+        
+        if key not in INVALID_REPORTED_KEYS[locale]:
+            logger.error(f"Missing localised string '{key}' for locale '{locale}'")
+            INVALID_REPORTED_KEYS[locale].append(key)
+        
         return None
     
     if isinstance(string, list):

@@ -54,7 +54,7 @@ def list_to_chunks(lst: list, size: int) -> list[list]:
     return [lst[i:i+size] for i in range(0, len(lst), size)]
 
 
-def text_to_chunks(text: str, size: int, include_nl: bool = False) -> list[str]:
+def text_to_chunks(text: str, size: int = 25, include_nl: bool = False) -> list[str]:
     """
     Splits a string into chunks of a given size
     """

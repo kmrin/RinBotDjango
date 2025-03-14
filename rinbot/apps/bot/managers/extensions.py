@@ -31,7 +31,7 @@ async def load_extensions(client: "Client") -> None:
                     continue
             
             try:
-                client.load_extension(f"rinbot.extensions.{extension}")
+                await client.load_extension(f"apps.bot.extensions.{extension}")
                 logger.info(f"Loaded extension: {extension}")
             
             except Exception as e:

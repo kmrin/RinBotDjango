@@ -24,7 +24,7 @@ def is_guild() -> Callable[[T], T]:
 
 def is_owner() -> Callable[[T], T]:
     async def predicate(interaction: Interaction) -> bool:
-        if not Owners.objects.filter(user_id=interaction.user.id).exists():
+        if not await Owners.objects.filter(user_id=interaction.user.id).aexists():
             raise UserNotOwner(interaction)
         
         return True
@@ -53,7 +53,7 @@ def is_admin() -> Callable[[T], T]:
 
 def not_blacklisted() -> Callable[[T], T]:
     async def predicate(interaction: Interaction) -> bool:
-        if Blacklist.objects.filter(user_id=interaction.user.id).exists():
+        if await Blacklist.objects.filter(user_id=interaction.user.id).aexists():
             raise UserBlacklisted(interaction)
         
         return True

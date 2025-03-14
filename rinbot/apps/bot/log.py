@@ -16,6 +16,10 @@ from logging import (
 from .conf import conf
 from .paths import Path
 
+# ANSI codes
+BOLD = "\x1b[1m"
+RESET = "\x1b[0m"
+
 
 class LoggingFormatter(Formatter):
     black = "\x1b[30m"
@@ -47,7 +51,6 @@ class LoggingFormatter(Formatter):
         formatter = logging.Formatter(format_str, "%d-%m-%y %H:%M:%S", style="{")
 
         return formatter.format(record)
-
 
 log_filename_latest = os.path.join(Path.LOG_LATEST)
 log_dirname_latest = os.path.dirname(log_filename_latest)

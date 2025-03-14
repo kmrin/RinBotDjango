@@ -3,6 +3,21 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.postgres.fields import ArrayField
 
 
+class Admins(models.Model):
+    guild_id = models.BigIntegerField()
+    guild_name = models.CharField(max_length=100)
+    user_id = models.BigIntegerField(primary_key=True)
+    user_name = models.CharField(max_length=100)
+
+    class Meta:
+        verbose_name = "Admin"
+        verbose_name_plural = "Admins"
+        unique_together = ('guild_id', 'user_id')
+    
+    def __str__(self):
+        return f"{self.user_name} in {self.guild_name}"
+
+
 class AutoRole(models.Model):
     active = models.BooleanField(default=True)
     guild_id = models.BigIntegerField()

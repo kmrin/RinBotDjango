@@ -4,10 +4,11 @@ import sys
 from asyncio.exceptions import CancelledError
 from discord import LoginFailure, Object as DiscordObj
 from discord.ext.commands import Bot
+from secrets import token_urlsafe
 
 from .conf import conf
 from .checks import db, startup
-from .log import Logger, log_exception, format_exception
+from .log import Logger, log_exception, format_exception, BOLD, RESET
 from .managers import events, tasks, locale, extensions
 from .helpers import generate_intents
 from .tree import on_error
@@ -30,6 +31,7 @@ class Client(Bot):
         self.music_clients: dict[int, object] = {}  # TODO: Add music client type
         self.task_handler = tasks.TaskManager(self)
         self.db_manager = db.DBManager(self)
+        self._owner_token = None
 
     async def sync_commands(self) -> None:
         logger.info("Syncing commands")
@@ -60,7 +62,10 @@ class Client(Bot):
         Startup sequence
         """
         
+        self._owner_token = token_urlsafe(32)
+        
         logger.info("Booting up")
+        logger.info(f"{BOLD}Token for owner registration:{RESET} {self._owner_token}")
         
         await self.add_cog(events.EventHandler(self))
         logger.info("Loaded internal extensions")
@@ -101,14 +106,18 @@ class Client(Bot):
         
         logger.info("Shutting down bot...")
         
+        self._is_closing = True
+        
         for player in list(self.music_clients.values()):
             try:
+                logger.info(f"Disconnecting music client in guild {player.guild.id}")
                 await player.dc(force=True)
             except Exception as e:
                 logger.error(f"Error disconnecting music client: {format_exception(e)}")
         
-        for tts in list(self.tts_clients.values()):
+        for guild_id, tts in list(self.tts_clients.items()):
             try:
+                logger.info(f"Disconnecting TTS client in guild {guild_id}")
                 await tts.client.disconnect(force=True)
             except Exception as e:
                 logger.error(f"Error disconnecting TTS client: {format_exception(e)}")

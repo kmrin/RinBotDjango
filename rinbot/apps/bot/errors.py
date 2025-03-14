@@ -1,6 +1,6 @@
 import asyncio
 
-from discord import Interaction, Embed, Colour
+from discord import Interaction, Embed, Colour, DMChannel
 from discord.app_commands import CheckFailure
 from discord.ext.commands import Context
 
@@ -10,6 +10,10 @@ from .utils import get_full_command
 from .responder import respond
 
 logger = Logger.ERRORS
+
+
+class RinBotError:
+    ...
 
 
 class InteractionTimedOut(Exception):
@@ -28,7 +32,7 @@ class InteractionTimedOut(Exception):
         await interaction.edit_original_response(content=None, embed=embed, view=None)
 
 
-class UserNotOwner(CheckFailure):
+class UserNotOwner(RinBotError, CheckFailure):
     def __init__(self, interaction: Interaction, empty: bool = False) -> None:
         asyncio.create_task(self.__do_action(interaction, empty))
     
@@ -39,10 +43,12 @@ class UserNotOwner(CheckFailure):
         channel = interaction.channel if interaction.channel else None
         command = get_full_command(interaction)
         
+        channel = "DMs" if isinstance(interaction.channel, DMChannel) else channel.name
+        
         logger.warning(
             f"Someone tried running a command of class 'owner' but they're not in this class: " \
             f"[Command: {command} | Who: {author.name} | Where: {guild.name if guild else 'DMs'}" \
-            f"(ID: {guild.id if guild else author.id}) | In channel: {channel.name if channel else ''}]"
+            f"(ID: {guild.id if guild else author.id}) | In channel: {channel}]"
         )
         
         locale = get_interaction_locale(interaction)
@@ -55,7 +61,7 @@ class UserNotOwner(CheckFailure):
             await respond(interaction, Colour.red(), empty_msg, hidden=True)
 
 
-class UserNotAdmin(CheckFailure):
+class UserNotAdmin(RinBotError, CheckFailure):
     def __init__(self, interaction: Interaction) -> None:
         asyncio.create_task(self.__do_action(interaction))
 
@@ -78,7 +84,7 @@ class UserNotAdmin(CheckFailure):
         await respond(interaction, Colour.red(), msg, hidden=True)
 
 
-class UserBlacklisted(CheckFailure):
+class UserBlacklisted(RinBotError, CheckFailure):
     def __init__(self, interaction: Interaction) -> None:
         asyncio.create_task(self.__do_action(interaction))
 
@@ -101,7 +107,7 @@ class UserBlacklisted(CheckFailure):
         await respond(interaction, Colour.red(), msg, hidden=True)
 
 
-class UserNotInGuild(CheckFailure):
+class UserNotInGuild(RinBotError, CheckFailure):
     def __init__(self, interaction: Interaction | Context) -> None:
         asyncio.create_task(self.__do_action(interaction))
     

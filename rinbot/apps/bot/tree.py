@@ -5,6 +5,7 @@ from discord.app_commands.errors import AppCommandError, TransformerError
 from .managers.locale import get_interaction_locale, get_localised_string
 from .log import Logger, log_exception
 from .responder import respond
+from .errors import RinBotError
 
 logger = Logger.TREE
 
@@ -35,6 +36,9 @@ async def on_error(interaction: Interaction, error: AppCommandError) -> None:
         
         string = get_localised_string(locale, key)
         await respond(interaction, Colour.red(), string, hidden=True)
+    
+    elif isinstance(error, RinBotError):
+        pass
     
     else:
         try:

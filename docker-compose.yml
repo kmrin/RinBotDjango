@@ -17,6 +17,8 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
+    networks:
+      - rinbot-network
   
   pgadmin:
     container_name: "RinBot-PGAdmin"
@@ -26,7 +28,9 @@ services:
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
     ports:
       - 5050:80
-  
+    networks:
+      - rinbot-network
+
   lavalink:
     container_name: "RinBot-Lavalink"
     image: fredboat/lavalink:latest
@@ -42,6 +46,8 @@ services:
     expose:
       - ${LAVALINK_PORT}
     restart: unless-stopped
+    networks:
+      - rinbot-network
 
   django:
     container_name: "RinBot-Django"
@@ -70,9 +76,15 @@ services:
       lavalink:
         condition: service_started
     restart: unless-stopped
+    networks:
+      - rinbot-network
 
 volumes:
   instance_data:
     name: rinbot-instance-data
   postgres_data:
     name: rinbot-db-data
+
+networks:
+  rinbot-network:
+    driver: bridge

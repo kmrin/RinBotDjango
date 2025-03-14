@@ -79,6 +79,8 @@ class EventHandler(Cog, name="event_handler"):
         
         # Run tasks
         await self.client.task_handler.start()
+        
+        logger.info("RinBot is ready")
 
     @Cog.listener()
     async def on_wavelink_node_ready(self, payload: wavelink.NodeReadyEventPayload) -> None:
@@ -89,12 +91,12 @@ class EventHandler(Cog, name="event_handler"):
     @Cog.listener()
     async def on_guild_join(self, guild: Guild) -> None:
         logger.info(f"Joined guild '{guild.name}' (ID: {guild.id})")
-        self.client.db_manager.check_all()
+        await self.client.db_manager.check_all()
     
     @Cog.listener()
     async def on_guild_remove(self, guild: Guild) -> None:
         logger.info(f"Left guild '{guild.name}' (ID: {guild.id})")
-        self.client.db_manager.check_all()
+        await self.client.db_manager.check_all()
 
     @Cog.listener()
     async def on_member_join(self, member: Member) -> None:
@@ -102,7 +104,7 @@ class EventHandler(Cog, name="event_handler"):
             f"Member {member.name} (ID: {member.id}) has joined guild {member.guild.name} (ID: {member.guild.id})"
         )
         
-        self.client.db_manager.check_all()
+        await self.client.db_manager.check_all()
         
         await self._on_member_join_action_welcome(member)
         await self._on_member_join_action_role(member)

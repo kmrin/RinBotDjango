@@ -10,11 +10,57 @@ system:
 
 # Command strings; Names, descriptions, arguments, options, etc.
 commands:
-    # /extension
+    # Core common
+    core_user_name: "user"
+    core_user_desc: "The user to be manipulated"
+
+    # /ping
+    core_ping_name: "ping"
+    core_ping_desc: "Check the bot's latency to discord's servers"
+    
+    # /shutdown
+    core_shutdown_name: "shutdown"
+    core_shutdown_desc: "Shuts down the bot"
+
+    # /extensions
+    core_ext_group_name: "extensions"
+    core_ext_group_desc: "Manage extensions"
     core_ext_manipulate_load_action: "Load"
     core_ext_manipulate_unload_action: "Unload"
     core_ext_manipulate_reload_action: "Reload"
-    
+    core_ext_option_name: "extension"
+    core_ext_option_desc: "The extension to be manipulated"
+    core_ext_list_name: "list"
+    core_ext_list_desc: "Lists all loaded extensions"
+    core_ext_load_name: "load"
+    core_ext_load_desc: "Loads an extension by name"
+    core_ext_unload_name: "unload"
+    core_ext_unload_desc: "Unloads an extension by name"
+    core_ext_reload_name: "reload"
+    core_ext_reload_desc: "Reloads an extension by name"
+
+    # /admins
+    core_admins_group_name: "admins"
+    core_admins_group_desc: "Manage admins"
+    core_admins_me_name: "me"
+    core_admins_me_desc: "Add yourself as an admin"
+    core_admins_add_name: "add"
+    core_admins_add_desc: "Add an admin"
+    core_admins_remove_name: "remove"
+    core_admins_remove_desc: "Remove an admin"
+
+    # /owners
+    core_owners_group_name: "owners"
+    core_owners_group_desc: "Manage owners"
+    core_owners_me_name: "me"
+    core_owners_me_desc: "Add yourself as an owner with the pre-generated token"
+    core_owners_me_token_name: "token"
+    core_owners_me_token_desc: "The pre-generated token shown in the logs"
+    core_owners_add_name: "add"
+    core_owners_add_desc: "Add an owner"
+    core_owners_remove_name: "remove"
+    core_owners_remove_desc: "Remove an owner"
+
     # /set greeting
     config_set_greeting_embed_no_picture: "No Picture"
     config_set_greeting_embed_small: "Small"
@@ -22,6 +68,39 @@ commands:
 
 # Response strings; Error messages, responses to user interactions, etc.
 responses:
+    # /ping
+    core_ping_latency: "Latency: `{latency}ms`"
+    core_ping_msg: " 🏓  Pong!"
+
+    # /shutdown
+    core_shutdown_msg: " :wave:  Shutting down..."
+
+    # /extensions
+    core_ext_list_embed_title: " 📃  Loaded extensions"
+    core_ext_list_embed_footer: " Count: {count}"
+    core_ext_load_success: " ✅  Extension `{ext}` loaded"
+    core_ext_unload_success: " ✅  Extension `{ext}` unloaded"
+    core_ext_reload_success: " ✅  Extension `{ext}` reloaded"
+    core_ext_internal: " ❌  Selected extension is of internal use"
+    core_ext_already_loaded: " ❌  Extension `{ext}` already loaded"
+    core_ext_not_loaded: " ❌  Extension `{ext}` not loaded"
+    core_ext_not_found: " ❌  Extension `{ext}` not found"
+    core_ext_no_entry: " ❌  `setup()` method not found in `{ext}`"
+
+    # /admins
+    core_admins_already_admin: " ❌  User is already an admin"
+    core_admins_not_admin: " ❌  User is not an admin"
+    core_admins_not_added: " ❌  Failed to add user as an admin"
+    core_admins_added: " ✅  User has been added as an admin"
+
+    # /owners
+    core_owners_invalid_token: " ❌  Invalid token"
+    core_owners_already_owner: " ❌  User is already an owner"
+    core_owners_not_added: " ❌  Failed to add you as an owner"
+    core_owners_added: " ✅  You have been added as an owner"
+    core_owners_not_owner: " ❌  You are not an owner"
+    core_owners_removed: " ✅  You have been removed as an owner"
+
     # Errors
     error_not_in_guild: " ❌  You must be in a guild to run this command"
     error_not_owner: " ❌  You must be an owner to run this command"

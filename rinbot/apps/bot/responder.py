@@ -87,6 +87,9 @@ async def _send(
         )
         return None
 
+    except AttributeError as e:
+        pass
+
     except Exception as e:
         log_exception(e, logger)
         return None

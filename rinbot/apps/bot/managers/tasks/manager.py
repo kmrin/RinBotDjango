@@ -65,7 +65,6 @@ class TaskManager:
                 try:
                     if task.is_running():
                         task.cancel()
-                        logger.info(f"Forcefully cancelled '{attr_name}'")
                 except Exception as e:
                     logger.error(f"Error cancelling task '{attr_name}': {e}")
         
