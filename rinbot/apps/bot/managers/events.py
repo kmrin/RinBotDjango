@@ -8,6 +8,7 @@ import tempfile
 
 from discord.app_commands import Command, ContextMenu
 from discord import Interaction, VoiceState, Guild, Member, Message, Embed
+from discord import Forbidden
 from typing import TYPE_CHECKING
 from gtts import gTTS
 
@@ -110,18 +111,25 @@ class EventHandler(Cog, name="event_handler"):
         await self._on_member_join_action_role(member)
 
     async def _on_member_join_action_welcome(self, member: Member) -> None:
+        logger.info(f"Performing welcome action for {member.display_name} (ID: {member.id})")
+        
         guild = member.guild
-        welcome_data = WelcomeChannels.objects.filter(guild_id=guild.id).first()
+        welcome_data = await WelcomeChannels.objects.filter(guild_id=guild.id).afirst()
         
         if not welcome_data:
+            logger.info(f"No welcome channel setting found for {guild.name} (ID: {guild.id})")
             return
         
         if not welcome_data.active or not welcome_data.channel_id:
+            logger.info(
+                f"Welcome channel setting is not active or channel ID is not set for {guild.name} (ID: {guild.id})"
+            )
             return
         
         channel = await get_channel(self.client, welcome_data.channel_id)
         
         if not channel:
+            logger.error(f"Channel with ID {welcome_data.channel_id} not found in {guild.name} (ID: {guild.id})")
             return
         
         title = welcome_data.title
@@ -154,20 +162,29 @@ class EventHandler(Cog, name="event_handler"):
         await channel.send(embed=embed)
 
     async def _on_member_join_action_role(self, member: Member) -> None:
+        logger.info(f"Performing auto-role action for {member.display_name} (ID: {member.id})")
+        
         guild = member.guild
         me = guild.me
         
-        auto_roles = AutoRole.objects.filter(guild_id=guild.id).first()
+        auto_roles = await AutoRole.objects.filter(guild_id=guild.id).afirst()
         
         if not auto_roles:
+            logger.info(f"No auto-role setting found for {guild.name} (ID: {guild.id})")
             return
         
         if not auto_roles.active or not auto_roles.role_id:
+            logger.info(f"Auto-role setting is not active or role ID is not set for {guild.name} (ID: {guild.id})")
             return
         
         role = await guild.fetch_role(auto_roles.role_id)
         
-        if not role or role in member.roles:
+        if not role:
+            logger.error(f"Role with ID {auto_roles.role_id} not found in {guild.name} (ID: {guild.id})")
+            return
+        
+        if role in member.roles:
+            logger.info(f"Role '{role.name}' is already assigned to {member.display_name} (ID: {member.id})")
             return
         
         logger.info(f"Adding role '{role.name}' to {member.display_name} (ID: {member.id})")
@@ -176,7 +193,14 @@ class EventHandler(Cog, name="event_handler"):
             logger.warning(f"I do not have permission to manage roles in {guild.name} (ID: {guild.id})")
             return
         
-        await member.add_roles(role)
+        try:
+            await member.add_roles(role)
+        
+        except Forbidden:
+            logger.warning(
+                f"I am unable to assign '{role.name}' to {member.display_name} (ID: {member.id}), " \
+                "role is probably higher than my highest role"
+            )
 
     @Cog.listener()
     async def on_member_remove(self, member: Member) -> None:
@@ -191,16 +215,23 @@ class EventHandler(Cog, name="event_handler"):
         )
         
         me = message.guild.me
-        guild_config = GuildConfig.objects.filter(guild_id=message.guild.id).first()
+        guild_config = await GuildConfig.objects.filter(guild_id=message.guild.id).afirst()
         
         if not guild_config:
+            logger.info(f"No spam filter setting found for {message.guild.name} (ID: {message.guild.id})")
             return
         
         if guild_config.spam_filter_action == 0:
+            logger.info(f"Spam filter is disabled for {message.guild.name} (ID: {message.guild.id})")
             return
         
         if guild_config.spam_filter_action == 1:
+            logger.info(
+                f"Spam filter action is set to delete messages for {message.guild.name} (ID: {message.guild.id})"
+            )
+            
             if me.guild_permissions.manage_messages:
+                logger.info(f"Deleting message from {message.author.display_name} (ID: {message.author.id})")
                 await message.delete()
             
             spam_filter_message = guild_config.spam_filter_message
@@ -214,10 +245,15 @@ class EventHandler(Cog, name="event_handler"):
                 await message.channel.send(spam_filter_message)
         
         elif guild_config.spam_filter_action == 2:
+            logger.info(
+                f"Spam filter action is set to kick members for {message.guild.name} (ID: {message.guild.id})"
+            )
+            
             if me.guild_permissions.manage_messages:
                 await message.delete()
             
             if me.guild_permissions.kick_members:
+                logger.info(f"Kicking {message.author.display_name} (ID: {message.author.id}) for spam")
                 await message.author.kick(reason="Spam")
     
     async def _on_message_tts(self, message: Message) -> None:

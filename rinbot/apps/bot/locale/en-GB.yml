@@ -66,6 +66,26 @@ commands:
     config_set_greeting_embed_small: "Small"
     config_set_greeting_embed_large: "Large"
 
+    # /configure guild
+    config_conf_gd_gp_name: "configure-guild"
+    config_conf_gd_gp_desc: "Configure features for this server"
+    
+    # /configure user
+    config_conf_us_gp_name: "configure-user"
+    config_conf_us_gp_desc: "Configure features for yourself"
+
+    # /toggle
+    config_toggle_gp_name: "toggle"
+    config_toggle_gp_desc: "Toggle a feature"
+
+    # /configure guild auto-role
+    config_conf_ar_name: "auto-role"
+    config_conf_ar_desc: "Automatically assign roles to new members"
+    config_conf_ar_success: " ✅  Auto-role set to role `{role}`"
+    config_conf_ar_updated: " ✅  Auto-role updated to role `{role}`"
+    config_conf_ar_role: "role"
+    config_conf_ar_role_desc: "The role to automatically assign to new members"
+
 # Response strings; Error messages, responses to user interactions, etc.
 responses:
     # /ping
