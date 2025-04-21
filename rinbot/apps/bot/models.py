@@ -107,7 +107,7 @@ class Guilds(models.Model):
 class GuildConfig(models.Model):
     SPAM_FILTER_CHOICES = [
         (0, "Disabled"),
-        (1, "Warn"),
+        (1, "Delete"),
         (2, "Kick")
     ]
     
@@ -117,7 +117,6 @@ class GuildConfig(models.Model):
         validators=[MinValueValidator(0), MaxValueValidator(2)]
     )
     spam_filter_message = models.TextField(null=True, blank=True)
-    spam_filter_reason = models.TextField(null=True, blank=True)
 
     class Meta:
         verbose_name = "Guild Configuration"

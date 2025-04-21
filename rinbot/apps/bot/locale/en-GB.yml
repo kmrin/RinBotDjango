@@ -81,10 +81,19 @@ commands:
     # /configure guild auto-role
     config_conf_ar_name: "auto-role"
     config_conf_ar_desc: "Automatically assign roles to new members"
-    config_conf_ar_success: " ✅  Auto-role set to role `{role}`"
-    config_conf_ar_updated: " ✅  Auto-role updated to role `{role}`"
     config_conf_ar_role: "role"
     config_conf_ar_role_desc: "The role to automatically assign to new members"
+
+    # /configure guild spam-filter
+    config_conf_sf_name: "spam-filter"
+    config_conf_sf_desc: "Configure the spam filter"
+    config_conf_sf_action: "action"
+    config_conf_sf_action_desc: "The action to take when a message is detected as spam"
+    config_conf_sf_message: "message"
+    config_conf_sf_message_desc: "The message to send when a message is detected as spam"
+    config_conf_sf_action_disabled: "Disabled"
+    config_conf_sf_action_delete: "Delete"
+    config_conf_sf_action_kick: "Kick"
 
 # Response strings; Error messages, responses to user interactions, etc.
 responses:
@@ -120,6 +129,14 @@ responses:
     core_owners_added: " ✅  You have been added as an owner"
     core_owners_not_owner: " ❌  You are not an owner"
     core_owners_removed: " ✅  You have been removed as an owner"
+
+    # /configure guild auto-role
+    config_conf_ar_success: " ✅  Auto-role set to role `{role}`"
+    config_conf_ar_updated: " ✅  Auto-role updated to role `{role}`"
+
+    # /configure guild spam-filter
+    config_conf_sf_success: " ✅  Spam filter configured"
+    config_conf_sf_updated: " ✅  Spam filter updated"
 
     # Errors
     error_not_in_guild: " ❌  You must be in a guild to run this command"
