@@ -3,6 +3,7 @@ import datetime
 
 from discord.ext import tasks
 from discord import CustomActivity, Embed, Colour, Status
+from discord import CustomActivity, Embed, Colour, Status
 from typing import TYPE_CHECKING
 from django.utils.timezone import now
 
@@ -29,7 +30,6 @@ class TaskList:
         
         if conf.debug:
             status = verbose.system["maintenance_status"]
-            
             return await self.client.change_presence(status=Status.dnd, activity=CustomActivity(name=status))
         
         try:
