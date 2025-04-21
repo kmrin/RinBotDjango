@@ -1,3 +1,5 @@
+import asyncio
+
 from inspect import getmembers, ismethod
 from typing import TYPE_CHECKING
 from django.db.models import Q
@@ -28,9 +30,12 @@ class DBManager:
     async def check_all(self) -> None:
         logger.info("Performing all checks")
         
+        check_methods = []
         for name, method in getmembers(self, ismethod):
             if name.startswith("check_") and name != "check_all":
-                await method()
+                check_methods.append(method())
+        
+        await asyncio.gather(*check_methods)
         
         logger.info("Finished")
 
