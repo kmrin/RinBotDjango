@@ -8,7 +8,7 @@ status:
   log: false
 
 spam-filter:
-  enabled: false
+  enabled: true
   time_window: 5
   max_per_window: 2
 

@@ -96,7 +96,7 @@ def get_localised_string(locale: str, key: str, *args, **kwargs) -> Optional[str
         
         return None
     
-    if isinstance(string, list):
+    if not isinstance(string, str):
         return string
     
     try:

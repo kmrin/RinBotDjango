@@ -25,10 +25,12 @@ from discord.app_commands import (
     command,
     rename,
     describe,
+    choices,
     allowed_contexts,
     allowed_installs,
     locale_str,
     Group,
+    Choice,
     AppCommandContext,
     AppInstallationType
 )
@@ -102,6 +104,46 @@ class Config(Cog, name="config"):
         else:
             await self.respond_with_success(interaction, "config_conf_ar_updated", role=role.name)
 
+    # /configure-guild spam-filter
+    @conf_gd_gp.command(
+        name=locale_str("config_conf_sf_name"),
+        description=locale_str("config_conf_sf_desc")
+    )
+    @rename(
+        action=locale_str("config_conf_sf_action"),
+        message=locale_str("config_conf_sf_message")
+    )
+    @describe(
+        action=locale_str("config_conf_sf_action_desc"),
+        message=locale_str("config_conf_sf_message_desc")
+    )
+    @choices(
+        action=[
+            Choice(name=locale_str("config_conf_sf_action_disabled"), value=0),
+            Choice(name=locale_str("config_conf_sf_action_delete"), value=1),
+            Choice(name=locale_str("config_conf_sf_action_kick"), value=2)
+        ]
+    )
+    @commands.not_blacklisted()
+    # @commands.is_admin()
+    @bot_has_permissions(manage_messages=True)
+    @has_permissions(manage_messages=True)
+    async def spam_filter(self, interaction: Interaction, action: Choice[int], message: str) -> None:
+        _, created = await GuildConfig.objects.aupdate_or_create(
+            guild_id=interaction.guild.id,
+            defaults={
+                'guild_id': interaction.guild.id,
+                'guild_name': interaction.guild.name,
+                'spam_filter_action': action.value,
+                'spam_filter_message': message
+            }
+        )
+        
+        if created:
+            await self.respond_with_success(interaction, "config_conf_sf_success")
+        else:
+            await self.respond_with_success(interaction, "config_conf_sf_updated")
+    
 
 # Setup
 async def setup(client: Client) -> None:
