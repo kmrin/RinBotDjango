@@ -95,8 +95,49 @@ commands:
     config_conf_sf_action_delete: "Delete"
     config_conf_sf_action_kick: "Kick"
 
+    # /configure guild welcome-channel
+    config_conf_wc_name: "welcome-channel"
+    config_conf_wc_desc: "Configure the welcome channel"
+    config_conf_wc_channel: "channel"
+    config_conf_wc_channel_desc: "The channel to send the welcome message to"
+    config_conf_wc_title: "title"
+    config_conf_wc_title_desc: "The title of the welcome message"
+    config_conf_wc_description: "description"
+    config_conf_wc_description_desc: "The description of the welcome message"
+    config_conf_wc_show_pfp: "show-pfp"
+    config_conf_wc_show_pfp_desc: "Whether to show the user's profile picture in the welcome message"
+    config_conf_wc_show_pfp_disabled: "Don't Show"
+    config_conf_wc_show_pfp_thumbnail: "Show Small"
+    config_conf_wc_show_pfp_image: "Show Large"
+    config_conf_wc_colour: "colour"
+    config_conf_wc_colour_desc: "The colour of the welcome message's embed"
+
 # Response strings; Error messages, responses to user interactions, etc.
 responses:
+    # Errors
+    error_not_in_guild: " ❌  You must be in a guild to run this command"
+    error_not_owner: " ❌  You must be an owner to run this command"
+    error_not_admin: " ❌  You must be an admin to run this command"
+    error_blacklisted: " ❌  You're blacklisted from running commands"
+    error_interaction_timeout: " ❌  The interaction timed out"
+    error_owners_empty: " ❌  There are no owners registered"
+    error_timeout: " 🕓  This interaction timed out"
+
+    # Tree errors
+    tree_missing_perms: " ❌  You don't have the necessary permissions to run this command: {perms}"
+    tree_bot_missing_perms: " ❌  I don't have the necessary permissions to run this command: {perms}"
+    tree_transformer_error: " ❌  An error occurred while converting a command argument"
+
+    # Birthday
+    birthday_title: " 🎂🎉  Birthday reminder!"
+    birthday_description: "Today is {name}'s special day!\n Remember to send them a message!"
+
+    # UI
+    ui_wc_aproved: " ✅  Welcome message set!"
+    ui_wc_denied: " ❌  Got it, you can try again if you want!"
+    ui_wc_confirm_label: "Confirm"
+    ui_wc_cancel_label: "Cancel"
+
     # /ping
     core_ping_latency: "Latency: `{latency}ms`"
     core_ping_msg: " 🏓  Pong!"
@@ -138,19 +179,6 @@ responses:
     config_conf_sf_success: " ✅  Spam filter configured"
     config_conf_sf_updated: " ✅  Spam filter updated"
 
-    # Errors
-    error_not_in_guild: " ❌  You must be in a guild to run this command"
-    error_not_owner: " ❌  You must be an owner to run this command"
-    error_not_admin: " ❌  You must be an admin to run this command"
-    error_blacklisted: " ❌  You're blacklisted from running commands"
-    error_interaction_timeout: " ❌  The interaction timed out"
-    error_owners_empty: " ❌  There are no owners registered"
-
-    # Tree errors
-    tree_missing_perms: " ❌  You don't have the necessary permissions to run this command: {perms}"
-    tree_bot_missing_perms: " ❌  I don't have the necessary permissions to run this command: {perms}"
-    tree_transformer_error: " ❌  An error occurred while converting a command argument"
-
-    # Birthday
-    birthday_title: " 🎂🎉  Birthday reminder!"
-    birthday_description: "Today is {name}'s special day!\n Remember to send them a message!"
+    # /configure guild welcome-channel
+    config_conf_wc_welcome_info: "Here's how it's going to look like, what do you think?"
+    config_conf_wc_invalid_colour: " ❌  Invalid colour, please provide a valid hex colour code. Example: `#FFFFFF`"

@@ -1,4 +1,4 @@
-from discord import Interaction, Colour
+from discord import Interaction, Colour, Embed
 from discord.ext.commands import Cog as DiscordCog
 from typing import Optional
 
@@ -99,4 +99,18 @@ class Cog(DiscordCog):
             get_localised_string(locale, "invalid_arguments", arguments=arguments),
             hidden=True,
             resp_type=response_type
+        )
+
+    @staticmethod
+    async def respond_with_timeout(interaction: Interaction) -> None:
+        locale = get_interaction_locale(interaction)
+        message = get_localised_string(locale, "error_timeout")
+        
+        await interaction.edit_original_response(
+            content=None,
+            embed=Embed(
+                description=message,
+                colour=Colour.yellow()
+            ),
+            view=None
         )

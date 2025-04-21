@@ -6,6 +6,10 @@ import atexit
 import signal
 
 from django.apps import AppConfig
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .client import Client
 
 
 class BotConfig(AppConfig):
@@ -14,7 +18,7 @@ class BotConfig(AppConfig):
     verbose_name = 'Rinbot Discord Bot'
     bot_thread: threading.Thread | None = None
     bot_loop: asyncio.AbstractEventLoop | None = None
-    client = None
+    client: Client | None = None
     
     def ready(self):
         if 'runserver' not in sys.argv and 'gunicorn' not in sys.argv[0]:

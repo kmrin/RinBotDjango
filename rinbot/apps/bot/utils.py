@@ -86,11 +86,10 @@ async def get_user(client: "Client", user_id: int) -> Optional[User]:
 
 
 async def get_user_avatar(user: User | Member, as_bytes: bool = False) -> str | bytes:
-    return (
-        await user.avatar.read() if user.avatar else await user.default_avatar.read()
-        if as_bytes else
-        user.avatar.url if user.avatar else user.default_avatar.url
-    )
+    if as_bytes:
+        return await user.avatar.read() if user.avatar else await user.default_avatar.read()
+    else:
+        return user.avatar.url if user.avatar else user.default_avatar.url
 
 
 async def get_channel(
