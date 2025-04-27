@@ -15,7 +15,7 @@ from gtts import gTTS
 from ..helpers import hex_to_colour
 from ..utils import get_full_command, get_channel, get_user_avatar
 from ..conf import conf
-from ..log import Logger
+from ..log import Logger, format_exception
 from ..subclasses import Cog
 from ..objects import TTSClient
 from ..models import WelcomeChannels, AutoRole, GuildConfig
@@ -67,13 +67,7 @@ class EventHandler(Cog, name="event_handler"):
         )
         
         # Connect to lavalink
-        # nodes = [wavelink.Node(
-        #     host=conf.lavalink.host,
-        #     port=conf.lavalink.port,
-        #     password=conf.lavalink.password
-        # )]
-        
-        # await wavelink.Pool.connect(nodes=nodes, client=self.client)
+        await self._connect_to_lavalink()
         
         # Update DB
         await self.client.db_manager.check_all()
@@ -82,6 +76,42 @@ class EventHandler(Cog, name="event_handler"):
         await self.client.task_handler.start()
         
         logger.info("RinBot is ready")
+
+    async def _connect_to_lavalink(self, max_retries: int = 5, retry_delay: int = 1) -> None:
+        for attempt in range(1, max_retries + 1):
+            try:
+                logger.info(f"Connecting to Lavalink (Attempt {attempt}/{max_retries})")
+                
+                node = wavelink.Node(
+                    uri=f"http://{conf.lavalink.host}:{conf.lavalink.port}",
+                    password=conf.lavalink.password,
+                    retries=3
+                )
+                
+                await wavelink.Pool.connect(nodes=[node], client=self.client)
+                logger.info("Successfully connected to Lavalink server")
+                
+                return
+            
+            except wavelink.LavalinkException as e:
+                logger.error(f"Failed to connect to Lavalink: {format_exception(e)}")
+                
+                if attempt < max_retries:
+                    logger.info(f"Retrying...")
+                    await asyncio.sleep(retry_delay)
+                
+                else:
+                    logger.error("Maximum retries reached. Could not connect to Lavalink server.")
+            
+            except Exception as e:
+                logger.error(f"An unexpected error occurred while connecting to Lavalink: {format_exception(e)}")
+                
+                if attempt < max_retries:
+                    logger.info(f"Retrying...")
+                    await asyncio.sleep(retry_delay)
+                
+                else:
+                    logger.error("Maximum retries reached. Could not connect to Lavalink server.")
 
     @Cog.listener()
     async def on_wavelink_node_ready(self, payload: wavelink.NodeReadyEventPayload) -> None:
