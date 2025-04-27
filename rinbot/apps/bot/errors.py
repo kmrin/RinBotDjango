@@ -26,7 +26,7 @@ class InteractionTimedOut(Exception):
     @staticmethod
     async def __do_action(interaction: Context | Interaction) -> None:
         locale = get_interaction_locale(interaction)
-        msg = get_localised_string(locale, "error_interaction_timeout")
+        msg = get_localised_string(locale, "error_timeout")
         embed = Embed(description=msg, colour=Colour.yellow())
 
         await interaction.edit_original_response(content=None, embed=embed, view=None)

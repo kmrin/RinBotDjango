@@ -3,7 +3,6 @@ import datetime
 
 from discord.ext import tasks
 from discord import CustomActivity, Embed, Colour, Status
-from discord import CustomActivity, Embed, Colour, Status
 from typing import TYPE_CHECKING
 from django.utils.timezone import now
 
@@ -11,7 +10,7 @@ from ...log import Logger
 from ...conf import conf
 from ...utils import get_user
 from ..locale import get_locale, get_localised_string
-from ...models import Birthdays
+from ...models import Birthdays, UserConfig
 
 if TYPE_CHECKING:
     from ...client import Client
@@ -50,14 +49,13 @@ class TaskList:
     async def birthday_check(self) -> None:
         today = now().date()
         today_month_day = (today.month, today.day)
-        birthdays = Birthdays.objects.all()
         
-        for birthday in birthdays:
-            birthday_date = birthday.date
-            if (birthday_date.month, birthday_date.day) == today_month_day:
+        async for birthday in Birthdays.objects.all():
+            if (birthday.month, birthday.day) == today_month_day:
                 user = await get_user(self.client, birthday.user_id)
+                user_config = await UserConfig.objects.aget(user_id=birthday.user_id)
                 
-                if user:
+                if user and user_config.birthday_notifications:
                     try:
                         locale = birthday.user_locale
                         title = get_localised_string(locale, "birthday_title")

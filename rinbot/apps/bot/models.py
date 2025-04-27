@@ -34,19 +34,20 @@ class AutoRole(models.Model):
 
 
 class Birthdays(models.Model):
-    date = models.DateField()
+    day = models.IntegerField()
+    month = models.IntegerField()
     name = models.CharField(max_length=100)
     user_id = models.BigIntegerField()
     user_name = models.CharField(max_length=100)
     user_locale = models.CharField(max_length=100)
     
     class Meta:
-        unique_together = ('date', 'user_id')
+        unique_together = ('day', 'month', 'user_id')
         verbose_name = "Birthday"
         verbose_name_plural = "Birthdays"
 
     def __str__(self):
-        return f"{self.name} on {self.date}"
+        return f"{self.name} on {self.day}/{self.month}"
 
 
 class Blacklist(models.Model):
@@ -164,7 +165,8 @@ class UserConfig(models.Model):
     user = models.OneToOneField(Users, on_delete=models.CASCADE, related_name='config')
     translate_private = models.BooleanField(default=False)
     fact_check_private = models.BooleanField(default=False)
-
+    birthday_notifications = models.BooleanField(default=False)
+    
     class Meta:
         verbose_name = "User Configuration"
         verbose_name_plural = "User Configurations"

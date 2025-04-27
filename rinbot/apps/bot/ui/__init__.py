@@ -2,3 +2,4 @@ from .default_confirmation import DefaultConfirmation
 from .greeting_confirmation import GreetingConfirmation
 from .default_pagination import DefaultPaginator
 from .welcome_confirmation import WelcomeConfirmation
+from .birthday_remove import BirthdayRemove

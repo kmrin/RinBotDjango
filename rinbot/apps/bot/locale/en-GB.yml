@@ -125,6 +125,26 @@ commands:
     config_toggle_feature_auto_role: "Auto role"
     config_toggle_feature_spam_filter: "Spam filter"
     config_toggle_feature_welcome_channel: "Welcome channel"
+    config_toggle_feature_birthday_notifications: "Birthday notifications"
+
+    # /birthday
+    birthday_gp_name: "birthday"
+    birthday_gp_desc: "Manage birthdays"
+
+    # /birthday add
+    birthday_add_name: "add"
+    birthday_add_desc: "Add a birthday"
+    birthday_add_day_name: "day"
+    birthday_add_day_desc: "The day of the birthday"
+    birthday_add_month_name: "month"
+    birthday_add_month_desc: "The month of the birthday"
+    birthday_add_name_name: "name"
+    birthday_add_name_desc: "The name or nickname of the person"
+
+    # /birthday remove
+    birthday_remove_name: "remove"
+    birthday_remove_desc: "Remove a birthday"
+    birthday_remove_no_birthdays: " ❌  You don't have any birthday reminders set"
 
 # Response strings; Error messages, responses to user interactions, etc.
 responses:
@@ -151,6 +171,8 @@ responses:
     ui_wc_denied: " ❌  Got it, you can try again if you want!"
     ui_wc_confirm_label: "Confirm"
     ui_wc_cancel_label: "Cancel"
+    ui_birthday_remove_placeholder: "Select the birthdays you want to remove"
+    ui_birthday_remove_selected: " ✅  Removed: {names}"
 
     # /ping
     core_ping_latency: "Latency: `{latency}ms`"

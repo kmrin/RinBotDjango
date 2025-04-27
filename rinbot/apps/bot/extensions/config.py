@@ -7,7 +7,11 @@ RinBot's config command cog
     * /configure-guild welcome-channel   - Sets a custom embed welcome message for new members
     * /configure-user translate-private  - Configure if translated messages should be private
     * /configure-user fact-check-private - Configure if fact-checked messages should be private
-    * /toggle                            - Toggle a feature on or off (auto-role, spam-filter or welcome-channel)
+    * /toggle                            - Toggle a feature on or off:
+                                            * auto-role
+                                            * spam-filter
+                                            * welcome-channel
+                                            * birthday-notifications
 """
 
 from typing import Optional
@@ -299,7 +303,8 @@ class Config(Cog, name="config"):
         feature=[
             Choice(name=locale_str("config_toggle_feature_auto_role"), value="auto-role"),
             Choice(name=locale_str("config_toggle_feature_spam_filter"), value="spam-filter"),
-            Choice(name=locale_str("config_toggle_feature_welcome_channel"), value="welcome-channel")
+            Choice(name=locale_str("config_toggle_feature_welcome_channel"), value="welcome-channel"),
+            Choice(name=locale_str("config_toggle_feature_birthday_notifications"), value="birthday-notifications")
         ]
     )
     @allowed_contexts(AppCommandContext(guild=True, dm_channel=False, private_channel=False))
@@ -348,6 +353,16 @@ class Config(Cog, name="config"):
             await WelcomeChannels.objects.aupdate(
                 guild_id=interaction.guild.id,
                 defaults={"active": new_state}
+            )
+        
+        # Birthday notifications
+        if feature == "birthday-notifications":
+            birthday_notifications = await UserConfig.objects.aget(user_id=interaction.user.id)
+            new_state = not birthday_notifications.birthday_notifications
+            
+            await UserConfig.objects.aupdate(
+                user_id=interaction.user.id,
+                defaults={"birthday_notifications": new_state}
             )
         
         await self.respond_with_success(
