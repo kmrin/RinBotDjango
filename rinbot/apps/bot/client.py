@@ -2,7 +2,7 @@ import os
 import sys
 
 from asyncio.exceptions import CancelledError
-from discord import LoginFailure, Object as DiscordObj
+from discord import LoginFailure
 from discord.ext.commands import Bot
 from secrets import token_urlsafe
 

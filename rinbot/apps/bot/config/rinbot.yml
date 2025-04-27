@@ -25,7 +25,7 @@ nsfw-extensions:
 
 lavalink:
   host: RinBot-Lavalink
-  port: 2333
+  port: 2001
   password: rinbot
 
 testing-servers:
