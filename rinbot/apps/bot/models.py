@@ -34,8 +34,8 @@ class AutoRole(models.Model):
 
 
 class Birthdays(models.Model):
-    day = models.IntegerField()
-    month = models.IntegerField()
+    day = models.IntegerField(null=True, blank=True)
+    month = models.IntegerField(null=True, blank=True)
     name = models.CharField(max_length=100)
     user_id = models.BigIntegerField()
     user_name = models.CharField(max_length=100)

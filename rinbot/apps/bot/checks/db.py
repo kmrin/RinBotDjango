@@ -179,7 +179,8 @@ class DBManager:
                     user=user,
                     defaults={
                         'translate_private': False,
-                        'fact_check_private': False
+                        'fact_check_private': False,
+                        'birthday_notifications': False
                     }
                 )
                 
