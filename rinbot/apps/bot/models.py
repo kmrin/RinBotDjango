@@ -6,13 +6,12 @@ from django.contrib.postgres.fields import ArrayField
 class Admins(models.Model):
     guild_id = models.BigIntegerField()
     guild_name = models.CharField(max_length=100)
-    user_id = models.BigIntegerField(primary_key=True)
+    user_id = models.BigIntegerField()
     user_name = models.CharField(max_length=100)
 
     class Meta:
         verbose_name = "Admin"
         verbose_name_plural = "Admins"
-        unique_together = ('guild_id', 'user_id')
     
     def __str__(self):
         return f"{self.user_name} in {self.guild_name}"
@@ -117,7 +116,12 @@ class GuildConfig(models.Model):
         validators=[MinValueValidator(0), MaxValueValidator(2)]
     )
     spam_filter_message = models.TextField(null=True, blank=True)
-
+    spam_filter_original_state = models.IntegerField(
+        default=0,
+        choices=SPAM_FILTER_CHOICES,
+        validators=[MinValueValidator(0), MaxValueValidator(2)]
+    )
+    
     class Meta:
         verbose_name = "Guild Configuration"
         verbose_name_plural = "Guild Configurations"

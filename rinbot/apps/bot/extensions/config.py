@@ -11,13 +11,9 @@ RinBot's config command cog
 """
 
 from typing import Optional
-from discord import Interaction, Embed, Member, Colour, Role, TextChannel
+from discord import Interaction, Embed, Role, TextChannel
 
 from discord.ext.commands import (
-    ExtensionNotFound,
-    ExtensionNotLoaded,
-    ExtensionAlreadyLoaded,
-    NoEntryPointError,
     has_permissions,
     bot_has_permissions
 )
@@ -37,18 +33,17 @@ from discord.app_commands import (
     AppInstallationType,
 )
 
-from ..models import Admins, Owners, GuildConfig, Guilds, WelcomeChannels, UserConfig, AutoRole
-from ..ui import DefaultPaginator, WelcomeConfirmation
+from ..models import GuildConfig, WelcomeChannels, UserConfig, AutoRole
+from ..ui import WelcomeConfirmation
 from ..checks import commands
-from ..log import Logger, log_exception
+from ..log import Logger
 from ..managers.locale import get_interaction_locale, get_localised_string
 from ..responder import respond
 from ..subclasses import Cog
 from ..client import Client
-from ..helpers import text_to_chunks, is_hex_colour, hex_to_colour
+from ..helpers import is_hex_colour, hex_to_colour, bool_choice
 from ..utils import get_user_avatar
-from ..objects import Response
-from ..conf import conf
+from ..objects import Response, CommandOptions
 
 logger = Logger.COMMANDS
 
@@ -69,16 +64,8 @@ class Config(Cog, name="config"):
     conf_us_gp = Group(
         name=locale_str("config_conf_us_gp_name"),
         description=locale_str("config_conf_us_gp_desc"),
-        allowed_contexts=AppCommandContext(guild=False, dm_channel=True, private_channel=True),
-        allowed_installs=AppInstallationType(guild=False, user=True)
-    )
-    
-    # Toggle group
-    toggle_gp = Group(
-        name=locale_str("config_toggle_gp_name"),
-        description=locale_str("config_toggle_gp_desc"),
-        allowed_contexts=AppCommandContext(guild=True, dm_channel=False, private_channel=False),
-        allowed_installs=AppInstallationType(guild=True, user=False)
+        allowed_contexts=AppCommandContext(guild=True, dm_channel=True, private_channel=True),
+        allowed_installs=AppInstallationType(guild=True, user=True)
     )
     
     # /configure-guild auto-role
@@ -96,10 +83,10 @@ class Config(Cog, name="config"):
         _, created = await AutoRole.objects.aupdate_or_create(
             guild_id=interaction.guild.id,
             defaults={
-                'guild_id': interaction.guild.id,
-                'guild_name': interaction.guild.name,
-                'role_id': role.id,
-                'role_name': role.name
+                "guild_id": interaction.guild.id,
+                "guild_name": interaction.guild.name,
+                "role_id": role.id,
+                "role_name": role.name
             }
         )
         
@@ -136,17 +123,18 @@ class Config(Cog, name="config"):
         _, created = await GuildConfig.objects.aupdate_or_create(
             guild_id=interaction.guild.id,
             defaults={
-                'guild_id': interaction.guild.id,
-                'guild_name': interaction.guild.name,
-                'spam_filter_action': action.value,
-                'spam_filter_message': message
+                "guild_id": interaction.guild.id,
+                "guild_name": interaction.guild.name,
+                "spam_filter_action": action.value,
+                "spam_filter_message": message,
+                "spam_filter_original_state": action.value
             }
         )
         
         if created:
-            await self.respond_with_success(interaction, "config_conf_sf_success")
+            await self.respond_with_success(interaction, "config_conf_sf_success", hidden=True)
         else:
-            await self.respond_with_success(interaction, "config_conf_sf_updated")
+            await self.respond_with_success(interaction, "config_conf_sf_updated", hidden=True)
     
     # /configure-guild welcome-channel
     @conf_gd_gp.command(
@@ -249,7 +237,126 @@ class Config(Cog, name="config"):
                 'colour': colour
             }
         )
-
+    
+    # /configure-user translate-private
+    @conf_us_gp.command(
+        name=locale_str("config_conf_us_tp_name"),
+        description=locale_str("config_conf_us_tp_desc")
+    )
+    @rename(private=locale_str("config_conf_us_tp_private"))
+    @describe(private=locale_str("config_conf_us_tp_private_desc"))
+    @choices(private=CommandOptions.BASIC_CONFIRMATION)
+    @commands.not_blacklisted()
+    async def translate_private(self, interaction: Interaction, private: Choice[int]) -> None:
+        locale = get_interaction_locale(interaction)
+        private = bool_choice(private)
+        
+        await UserConfig.objects.aupdate(
+            user_id=interaction.user.id,
+            defaults={"translate_private": private}
+        )
+        
+        await self.respond_with_success(
+            interaction,
+            "config_conf_us_tp_success",
+            hidden=True,
+            private=get_localised_string(locale, "on" if private else "off").lower()
+        )
+    
+    # /configure-user fact-check-private
+    @conf_us_gp.command(
+        name=locale_str("config_conf_us_fc_name"),
+        description=locale_str("config_conf_us_fc_desc")
+    )
+    @rename(private=locale_str("config_conf_us_fc_private"))
+    @describe(private=locale_str("config_conf_us_fc_private_desc"))
+    @choices(private=CommandOptions.BASIC_CONFIRMATION)
+    @commands.not_blacklisted()
+    async def fact_check_private(self, interaction: Interaction, private: Choice[int]) -> None:
+        locale = get_interaction_locale(interaction)
+        private = bool_choice(private)
+        
+        await UserConfig.objects.aupdate(
+            user_id=interaction.user.id,
+            defaults={"fact_check_private": private}
+        )
+        
+        await self.respond_with_success(
+            interaction,
+            "config_conf_us_fc_success",
+            hidden=True,
+            private=get_localised_string(locale, "on" if private else "off").lower()
+        )
+    
+    # /toggle
+    @command(
+        name=locale_str("config_toggle_name"),
+        description=locale_str("config_toggle_desc")
+    )
+    @rename(feature=locale_str("config_toggle_feature"))
+    @describe(feature=locale_str("config_toggle_feature_desc"))
+    @choices(
+        feature=[
+            Choice(name=locale_str("config_toggle_feature_auto_role"), value="auto-role"),
+            Choice(name=locale_str("config_toggle_feature_spam_filter"), value="spam-filter"),
+            Choice(name=locale_str("config_toggle_feature_welcome_channel"), value="welcome-channel")
+        ]
+    )
+    @allowed_contexts(AppCommandContext(guild=True, dm_channel=False, private_channel=False))
+    @allowed_installs(AppInstallationType(guild=True, user=False))
+    @commands.not_blacklisted()
+    async def toggle(self, interaction: Interaction, feature: Choice[str]) -> None:
+        locale = get_interaction_locale(interaction)
+        feature = feature.value
+        
+        # Auto-role
+        if feature == "auto-role":
+            auto_role = await AutoRole.objects.aget(guild_id=interaction.guild.id)
+            new_state = not auto_role.active
+            
+            await AutoRole.objects.aupdate(
+                guild_id=interaction.guild.id,
+                defaults={"active": new_state}
+            )
+        
+        # Spam filter
+        if feature == "spam-filter":
+            spam_filter = await GuildConfig.objects.aget(guild_id=interaction.guild.id)
+            new_spam_state = 0 if spam_filter.spam_filter_action != 0 else spam_filter.spam_filter_original_state
+            new_state = False if new_spam_state == 0 else True
+            
+            if spam_filter.spam_filter_action != 0:
+                await GuildConfig.objects.aupdate(
+                    guild_id=interaction.guild.id,
+                    defaults={
+                        "spam_filter_action": new_spam_state,
+                        "spam_filter_original_state": spam_filter.spam_filter_action
+                    }
+                )
+            
+            else:
+                await GuildConfig.objects.aupdate(
+                    guild_id=interaction.guild.id,
+                    defaults={"spam_filter_action": new_spam_state}
+                )
+        
+        # Welcome channel
+        if feature == "welcome-channel":
+            welcome_channel = await WelcomeChannels.objects.aget(guild_id=interaction.guild.id)
+            new_state = not welcome_channel.active
+            
+            await WelcomeChannels.objects.aupdate(
+                guild_id=interaction.guild.id,
+                defaults={"active": new_state}
+            )
+        
+        await self.respond_with_success(
+            interaction,
+            "config_toggle_success",
+            hidden=True,
+            feature=feature,
+            state=get_localised_string(locale, "on" if new_state else "off").lower()
+        )
 
 # Setup
 async def setup(client: Client) -> None:

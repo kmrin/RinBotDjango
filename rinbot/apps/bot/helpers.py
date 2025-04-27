@@ -22,12 +22,12 @@ def is_hex_colour(colour: str) -> bool:
 # Converters
 def bool_choice(choice: Literal[0, 1] | Choice) -> bool:
     """
-    Convert a bool or a Choice to a bool
+    Convert a integer or a Choice to a bool
     """
 
     if isinstance(choice, Choice):
         return choice.value == 1
-    return bool(choice)
+    return choice == 1
 
 
 def ms_to_string(ms: int) -> str:

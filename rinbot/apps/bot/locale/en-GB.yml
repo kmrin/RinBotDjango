@@ -5,8 +5,10 @@ system:
         - " 🥰 At your service"
     
     maintenance_status: " ⚠️  Maintenance mode"
-    yes: "Yes"
-    no: "No"
+    state_yes: "Yes"
+    state_no: "No"
+    state_on: "On"
+    state_off: "Off"
 
 # Command strings; Names, descriptions, arguments, options, etc.
 commands:
@@ -61,30 +63,21 @@ commands:
     core_owners_remove_name: "remove"
     core_owners_remove_desc: "Remove an owner"
 
-    # /set greeting
-    config_set_greeting_embed_no_picture: "No Picture"
-    config_set_greeting_embed_small: "Small"
-    config_set_greeting_embed_large: "Large"
-
-    # /configure guild
+    # /configure-guild
     config_conf_gd_gp_name: "configure-guild"
     config_conf_gd_gp_desc: "Configure features for this server"
     
-    # /configure user
+    # /configure-user
     config_conf_us_gp_name: "configure-user"
     config_conf_us_gp_desc: "Configure features for yourself"
 
-    # /toggle
-    config_toggle_gp_name: "toggle"
-    config_toggle_gp_desc: "Toggle a feature"
-
-    # /configure guild auto-role
+    # /configure-guild auto-role
     config_conf_ar_name: "auto-role"
     config_conf_ar_desc: "Automatically assign roles to new members"
     config_conf_ar_role: "role"
     config_conf_ar_role_desc: "The role to automatically assign to new members"
 
-    # /configure guild spam-filter
+    # /configure-guild spam-filter
     config_conf_sf_name: "spam-filter"
     config_conf_sf_desc: "Configure the spam filter"
     config_conf_sf_action: "action"
@@ -95,7 +88,7 @@ commands:
     config_conf_sf_action_delete: "Delete"
     config_conf_sf_action_kick: "Kick"
 
-    # /configure guild welcome-channel
+    # /configure-guild welcome-channel
     config_conf_wc_name: "welcome-channel"
     config_conf_wc_desc: "Configure the welcome channel"
     config_conf_wc_channel: "channel"
@@ -111,6 +104,27 @@ commands:
     config_conf_wc_show_pfp_image: "Show Large"
     config_conf_wc_colour: "colour"
     config_conf_wc_colour_desc: "The colour of the welcome message's embed"
+
+    # /configure-user translate-private
+    config_conf_us_tp_name: "translate-private"
+    config_conf_us_tp_desc: "Configure the translate private feature"
+    config_conf_us_tp_private: "private"
+    config_conf_us_tp_private_desc: "Whether to translate private messages"
+    
+    # /configure-user fact-check-private
+    config_conf_us_fc_name: "fact-check-private"
+    config_conf_us_fc_desc: "Configure the fact check private feature"
+    config_conf_us_fc_private: "private"
+    config_conf_us_fc_private_desc: "Whether to fact check private messages"
+
+    # /toggle
+    config_toggle_name: "toggle"
+    config_toggle_desc: "Toggle a feature"
+    config_toggle_feature: "feature"
+    config_toggle_feature_desc: "The feature to toggle"
+    config_toggle_feature_auto_role: "Auto role"
+    config_toggle_feature_spam_filter: "Spam filter"
+    config_toggle_feature_welcome_channel: "Welcome channel"
 
 # Response strings; Error messages, responses to user interactions, etc.
 responses:
@@ -171,14 +185,23 @@ responses:
     core_owners_not_owner: " ❌  You are not an owner"
     core_owners_removed: " ✅  You have been removed as an owner"
 
-    # /configure guild auto-role
+    # /configure-guild auto-role
     config_conf_ar_success: " ✅  Auto-role set to role `{role}`"
     config_conf_ar_updated: " ✅  Auto-role updated to role `{role}`"
 
-    # /configure guild spam-filter
+    # /configure-guild spam-filter
     config_conf_sf_success: " ✅  Spam filter configured"
     config_conf_sf_updated: " ✅  Spam filter updated"
 
-    # /configure guild welcome-channel
+    # /configure-guild welcome-channel
     config_conf_wc_welcome_info: "Here's how it's going to look like, what do you think?"
     config_conf_wc_invalid_colour: " ❌  Invalid colour, please provide a valid hex colour code. Example: `#FFFFFF`"
+
+    # /configure-user translate-private
+    config_conf_us_tp_success: " ✅  Translate private set to {state}"
+
+    # /configure-user fact-check-private
+    config_conf_us_fc_success: " ✅  Fact check private set to {state}"
+
+    # /toggle
+    config_toggle_success: " ✅  Feature `{feature}` toggled {state}"

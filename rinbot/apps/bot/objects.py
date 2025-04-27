@@ -43,11 +43,12 @@ class TTSClient:
 
 
 class CommandOptions:
-    YES = [Choice(name=locale_str("yes"), value=1)]
+    YES = [Choice(name=locale_str("state_yes"), value=1)]
+    NO = [Choice(name=locale_str("state_no"), value=0)]
     
     BASIC_CONFIRMATION = [
-        Choice(name=locale_str("yes"), value=1),
-        Choice(name=locale_str("no"), value=0)
+        Choice(name=locale_str("state_yes"), value=1),
+        Choice(name=locale_str("state_no"), value=0)
     ]
     
     EXTENSION_MANIPULATE_OPTS = [
