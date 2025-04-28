@@ -15,6 +15,8 @@ class Path(StrEnum):
     LOG_LATEST = get_os_path("/var/lib/rinbot/logs/latest.log", from_root=True)
     LOG_HISTORY = get_os_path("/var/lib/rinbot/logs/history", from_root=True)
     LOG_TRACEBACKS = get_os_path("/var/lib/rinbot/logs/tracebacks", from_root=True)
+    CACHE = get_os_path("/var/lib/rinbot/cache", from_root=True)
+    TREE_HASH = get_os_path("/var/lib/rinbot/cache/tree_hash.txt", from_root=True)
 
     @classmethod
     def list_paths(cls) -> list[str]:

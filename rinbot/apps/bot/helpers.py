@@ -1,9 +1,11 @@
 import re
 import os
+import json
+import pickle
 import string
 import random
 
-from typing import Literal, Optional
+from typing import Literal, Optional, Any
 from discord import Colour, Intents
 from discord.app_commands import Choice
 from translate import Translator
@@ -17,6 +19,24 @@ def is_hex_colour(colour: str) -> bool:
     """
     
     return bool(re.match(r"^#(?:[0-9a-fA-F]{6})$", colour))
+
+
+def is_serializable(obj: Any, method: Literal["json", "pickle"] = "json") -> bool:
+    """
+    Checks if an object is serializable
+    """
+    
+    try:
+        if method == "json":
+            json.dumps(obj)
+            return True
+    
+        elif method == "pickle":
+            pickle.dumps(obj)
+            return True
+
+    except (TypeError, OverflowError, ValueError):
+        return False
 
 
 # Converters

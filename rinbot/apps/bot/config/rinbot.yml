@@ -1,6 +1,7 @@
 version: "7.0.0 - Serenity"
 debug: true
 forward_discord_logs: false
+always_sync: false
 
 status:
   language: en-GB

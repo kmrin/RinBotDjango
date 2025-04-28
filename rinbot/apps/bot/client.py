@@ -11,9 +11,8 @@ from .checks import db, startup
 from .log import Logger, log_exception, format_exception, BOLD, RESET
 from .managers import events, tasks, locale, extensions
 from .helpers import generate_intents
-from .tree import on_error
+from .tree import TreeSync,on_error
 from .objects import TTSClient
-from .utils import get_guild
 
 logger = Logger.CLIENT
 
@@ -31,30 +30,12 @@ class Client(Bot):
         self.music_clients: dict[int, object] = {}  # TODO: Add music client type
         self.task_handler = tasks.TaskManager(self)
         self.db_manager = db.DBManager(self)
+        self.sync_mgr = TreeSync(self)
         self._owner_token = None
-
-    async def sync_commands(self) -> None:
-        logger.info("Syncing commands")
-        
-        await self.tree.sync()
-        
-        if conf.testing_servers:
-            logger.info("Trying to sync to provided testing guild(s)")
-            
-            for guild_id in conf.testing_servers:
-                guild = await get_guild(self, guild_id)
-                
-                if guild:
-                    await self.tree.sync(guild=guild)
-                    
-                    logger.info(f"Synced to guild {guild.name} ({guild_id})")
-                
-                else:
-                    logger.warning(f"Failed to sync to guild '{guild_id}', null returned")
     
     async def setup_hook(self) -> None:
         await self.tree.set_translator(locale.Translator())
-        await self.sync_commands()
+        await self.sync_mgr.sync()
     
     async def init(self) -> None:
         """

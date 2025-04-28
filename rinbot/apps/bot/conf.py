@@ -48,6 +48,7 @@ class Config(BaseModel):
     version: str
     debug: bool
     forward_discord_logs: bool
+    always_sync: bool
     status: _Status
     spam_filter: _SpamFilter = Field(alias="spam-filter")
     nsfw_extensions: _NSFWExtensions = Field(alias="nsfw-extensions")
