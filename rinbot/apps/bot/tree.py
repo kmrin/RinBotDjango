@@ -197,8 +197,8 @@ class TreeSync:
 
         self._save_hash()
 
-    async def sync(self) -> None:
-        if conf.always_sync:
+    async def sync(self, force: bool = False) -> None:
+        if conf.always_sync or force:
             return await self._sync()
         
         if self._compare_hash():

@@ -160,11 +160,13 @@ class Core(Cog, name="core"):
         if extension.lower() in conf.internal_extensions:
             return await self.respond_with_failure(interaction, "core_ext_internal")
         
+        await interaction.response.defer(thinking=True)
+        
         try:
             await self.client.load_extension(f"apps.bot.extensions.{extension}")
-            
+            await self.client.sync_mgr.sync(force=True)
+                        
             await self.respond_with_success(interaction, "core_ext_load_success", ext=extension, hidden=True)
-            await self.client.sync_commands()
             
             return
         
@@ -193,11 +195,13 @@ class Core(Cog, name="core"):
         if extension.lower() in conf.internal_extensions:
             return await self.respond_with_failure(interaction, "core_ext_internal")
         
+        await interaction.response.defer(thinking=True)
+        
         try:
             await self.client.unload_extension(f"apps.bot.extensions.{extension}")
+            await self.client.sync_mgr.sync(force=True)
             
             await self.respond_with_success(interaction, "core_ext_unload_success", ext=extension, hidden=True)
-            await self.client.sync_commands()
             
             return
         
@@ -224,11 +228,13 @@ class Core(Cog, name="core"):
         if extension.lower() in conf.internal_extensions:
             return await self.respond_with_failure(interaction, "core_ext_internal")
         
+        await interaction.response.defer(thinking=True)
+        
         try:
             await self.client.reload_extension(f"apps.bot.extensions.{extension}")
+            await self.client.sync_mgr.sync(force=True)
             
             await self.respond_with_success(interaction, "core_ext_reload_success", ext=extension, hidden=True)
-            await self.client.sync_commands()
             
             return
         
@@ -236,7 +242,7 @@ class Core(Cog, name="core"):
             key = "core_ext_not_found"
         except Exception as e:
             e = log_exception(e, logger)
-            key = "unknown_failure"
+            key = "error_unknown"
         
         await self.respond_with_failure(interaction, key, ext=extension, hidden=True)
 

@@ -79,7 +79,7 @@ class Cog(DiscordCog):
         
         await respond(
             interaction, Colour.red(),
-            get_localised_string(locale, "unknown_failure"),
+            get_localised_string(locale, "error_unknown"),
             hidden=True
         )
     

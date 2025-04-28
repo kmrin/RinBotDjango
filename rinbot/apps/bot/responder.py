@@ -100,7 +100,7 @@ async def respond(
         colour: Colour = Colour.gold(),
         message: Optional[str | Embed] = None,
         title: Optional[str] = None,
-        view: Optional[View] = None,
+        view: Optional[View] = MISSING,
         outside_content: Optional[str] = None,
         hidden: bool = False,
         resp_type: Response = Response.SEND,

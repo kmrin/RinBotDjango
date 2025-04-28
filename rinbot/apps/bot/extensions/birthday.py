@@ -81,7 +81,7 @@ class Birthday(Cog, name="birthday"):
         )
         await birthday_obj.asave()
         
-        return self.respond_with_success(
+        return await self.respond_with_success(
             interaction, "birthday_added",
             hidden=True,
             name=name,
@@ -94,19 +94,19 @@ class Birthday(Cog, name="birthday"):
         description=locale_str("birthday_remove_desc")
     )
     async def remove(self, interaction: Interaction) -> None:
-        birthdays: list[Birthdays] = await Birthdays.objects.filter(user_id=interaction.user.id).all()
+        birthdays = await Birthdays.objects.filter(user_id=interaction.user.id).acount()
         
-        if not birthdays:
-            return self.respond_with_failure(interaction, "birthday_no_birthdays")
+        if birthdays == 0:
+            return await self.respond_with_failure(interaction, "birthday_remove_no_birthdays")
         
         view_payload = {}
         
+        async for birthday in Birthdays.objects.filter(user_id=interaction.user.id).all():
+            view_payload[f"{birthday.day}/{birthday.month}"] = birthday.name
+            
         logger.debug(f"Birthdays: {birthdays}")
         logger.debug(f"View payload: {view_payload}")
         
-        for birthday in birthdays:
-            view_payload[f"{birthday.day}/{birthday.month}"] = birthday.name
-            
         view = BirthdayRemove(interaction, view_payload)
         await interaction.response.send_message(view=view)
         
@@ -116,7 +116,6 @@ class Birthday(Cog, name="birthday"):
             return
         
         await Birthdays.objects.filter(user_id=interaction.user.id, name__in=view.selected_names).adelete()
-
 
 # Setup
 async def setup(client: Client) -> None:

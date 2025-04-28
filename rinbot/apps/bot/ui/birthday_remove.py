@@ -17,7 +17,7 @@ class BirthdayRemove(View):
         self.has_options = False
         
         options = []
-        for name, date in birthday_dict.items():
+        for date, name in birthday_dict.items():
             options.append(
                 SelectOption(
                     label=name,
@@ -56,7 +56,7 @@ class BirthdaySelect(Select):
             
             await interaction.edit_original_response(
                 embed=Embed(
-                    description=get_localised_string(self.locale, "ui_birthday_remove_selected", names_str),
+                    description=get_localised_string(self.locale, "ui_birthday_remove_selected", names=names_str),
                     colour=Colour.green()
                 ), 
                 view=None

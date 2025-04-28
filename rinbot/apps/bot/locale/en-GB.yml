@@ -156,6 +156,7 @@ responses:
     error_interaction_timeout: " ❌  The interaction timed out"
     error_owners_empty: " ❌  There are no owners registered"
     error_timeout: " 🕓  This interaction timed out"
+    error_unknown: " ❌  An unknown error occurred"
 
     # Tree errors
     tree_missing_perms: " ❌  You don't have the necessary permissions to run this command: {perms}"
@@ -227,3 +228,6 @@ responses:
 
     # /toggle
     config_toggle_success: " ✅  Feature `{feature}` toggled {state}"
+
+    # /birthday add
+    birthday_added: " ✅  Birthday reminder added for **{name}** on **{day}/{month}**"
